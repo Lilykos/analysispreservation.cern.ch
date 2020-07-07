@@ -396,7 +396,9 @@ RECORDS_REST_ENDPOINTS['recid'].update({
         'application/basic+json': ('cap.modules.records.serializers'
                                    ':basic_json_v1_response'),
         'application/form+json': ('cap.modules.records.serializers'
-                                  ':record_form_json_v1_response')
+                                  ':record_form_json_v1_response'),
+        'application/versions+json': ('cap.modules.records.serializers'
+                                      ':record_versions_json_v1_response')
     },
     'search_serializers': {
         'application/json': ('cap.modules.records.serializers'

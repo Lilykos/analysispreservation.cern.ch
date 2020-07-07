@@ -32,13 +32,14 @@ from invenio_records_rest.serializers.response import (record_responsify,
 from .json import RecordSerializer
 from .schemas.json import (BasicDepositSchema, PermissionsDepositSchema,
                            RecordFormSchema, RecordSchema,
-                           RepositoriesDepositSchema)
+                           RecordVersionsSchema, RepositoriesDepositSchema)
 
 # Serializers
 # ===========
 # CAP JSON serializer version 1.0.0
 record_json_v1 = RecordSerializer(RecordSchema)
 record_form_json_v1 = RecordSerializer(RecordFormSchema)
+record_versions_json_v1 = RecordSerializer(RecordVersionsSchema)
 
 basic_json_v1 = JSONSerializer(BasicDepositSchema)
 permissions_json_v1 = JSONSerializer(PermissionsDepositSchema)
@@ -50,6 +51,9 @@ repositories_json_v1 = JSONSerializer(RepositoriesDepositSchema)
 record_json_v1_response = record_responsify(record_json_v1, 'application/json')
 record_form_json_v1_response = record_responsify(record_form_json_v1,
                                                  'application/json')
+record_versions_json_v1_response = record_responsify(
+    record_versions_json_v1, 'application/versions+json')
+
 record_json_v1_search = search_responsify(record_json_v1, 'application/json')
 basic_json_v1_response = record_responsify(basic_json_v1,
                                            'application/basic+json')

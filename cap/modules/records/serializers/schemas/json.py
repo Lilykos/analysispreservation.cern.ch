@@ -30,6 +30,7 @@ import copy
 from marshmallow import Schema, fields
 
 from cap.modules.deposit.api import CAPDeposit
+from cap.modules.records.api import CAPRecord
 from cap.modules.records.permissions import UpdateRecordPermission
 from cap.modules.repos.serializers import GitWebhookSubscriberSchema
 from cap.modules.user.utils import get_role_name_by_id, get_user_email_by_id
@@ -64,6 +65,19 @@ class RecordFormSchema(RecordSchema):
     def can_user_update(self, obj):
         deposit = CAPDeposit.get_record(obj['pid'].object_uuid)
         return UpdateRecordPermission(deposit).can()
+
+
+class RecordVersionsSchema(Schema):
+    """Schema for files in deposit."""
+
+    versions = fields.Method('get_versions', dump_only=True)
+
+    def get_versions(self, obj):
+        record = CAPRecord.get_record(obj['pid'].object_uuid)
+        metadata = record.get_record_metadata()
+        versions = metadata.versions.all()
+
+        return [version.json for version in versions]
 
 
 class BasicDepositSchema(Schema):
