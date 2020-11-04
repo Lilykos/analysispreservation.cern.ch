@@ -25,13 +25,17 @@
 
 """CAP CERN service views."""
 
+import requests
 import ldap
 from ldap import LDAPError
-from flask import jsonify, request
+from flask import current_app, jsonify, request, abort
+
+from invenio_rest.errors import RESTException
 
 from . import blueprint
 from cap.modules.access.utils import login_required
-
+from cap.modules.auth.utils import get_oidc_token, get_bearer_headers
+from cap.modules.experiments.errors import ExternalAPIException
 
 LDAP_SERVER_URL = 'ldap://xldap.cern.ch'
 
@@ -113,4 +117,47 @@ def ldap_egroup_mail():
 
     resp, status = _ldap(query, sf, by='egroup')
     data = [x[1]['mail'][0] for x in resp]
+    return jsonify(data)
+
+
+def _oidc(endpoint, query):
+    token = get_oidc_token()
+    try:
+        resp = requests.get(
+            url=f'{endpoint}?filter=displayName:contains:{query}',
+            headers=get_bearer_headers(token)
+        )
+
+        if resp.ok:
+            return resp.json()['data']
+        else:
+            abort(resp.status_code,
+                  'Something went wrong while making the request.')
+    except ExternalAPIException:
+        raise
+
+
+@blueprint.route('/oidc/user')
+# @login_required
+def oidc_search_user():
+    """OIDC user by username query."""
+    endpoint = current_app.config.get('OIDC_IDENTITY_API')
+    query = request.args.get('query', None)
+    if not query:
+        raise RESTException(description='User query not found.')
+
+    data = _oidc(endpoint, query)
+    return jsonify(data)
+
+
+@blueprint.route('/oidc/group')
+# @login_required
+def oidc_search_group():
+    """OIDC user by username query."""
+    endpoint = current_app.config.get('OIDC_GROUP_API')
+    query = request.args.get('query', None)
+    if not query:
+        raise RESTException(description='Group query not found.')
+
+    data = _oidc(endpoint, query)
     return jsonify(data)

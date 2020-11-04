@@ -25,6 +25,10 @@
 """Authentication views for CAP."""
 
 from functools import wraps
+from json import JSONDecodeError
+
+import requests
+from authlib.integrations.base_client.errors import OAuthError
 from flask import Blueprint, url_for, current_app, jsonify, \
                   request, session, abort, render_template
 from flask_login import current_user
@@ -37,11 +41,10 @@ from werkzeug.exceptions import HTTPException
 from .config import OAUTH_SERVICES, USER_PROFILE
 from .models import OAuth2Token
 from .proxies import current_auth
-from .utils import _create_or_update_token
+from .utils import _create_or_update_token, get_oidc_token, get_bearer_headers
 
+from cap.modules.experiments.errors import ExternalAPIException
 from cap.modules.access.utils import login_required
-
-from authlib.integrations.base_client.errors import OAuthError
 
 blueprint = Blueprint(
     'cap_auth',
@@ -191,6 +194,8 @@ def get_oauth_profile(name, token=None, client=None):
     # Check if OIDC and can get useerInfo
     if _client.load_server_metadata().get('userinfo_endpoint'):
         resp = _client.userinfo()
+        if name == 'cern':
+            groups = get_oidc_user_groups(resp['email'])
     elif name == 'orcid':
         orcid = extra_data.get('orcid_id')
         resp = None
@@ -207,3 +212,28 @@ def get_oauth_profile(name, token=None, client=None):
     except AttributeError:
         res_json = {}
     return res_json
+
+
+def get_oidc_user_groups(email):
+    """Retrieves the logged-in user's groups through CERN OIDC."""
+    endpoint = current_app.config.get('OIDC_IDENTITY_API')
+    token = get_oidc_token()
+
+    try:
+        # get the user's uuid
+        resp = requests.get(
+            url=f'{endpoint}/by_email/{email}',
+            headers=get_bearer_headers(token)
+        )
+        user_uuid = resp.json()['data'][0]['id']
+
+        # get the user's groups
+        resp = requests.get(
+            url=f'{endpoint}/{user_uuid}/groups',
+            headers=get_bearer_headers(token)
+        )
+
+        return [group['groupIdentifier'] for group in resp.json()['data']] \
+            if resp.ok else []
+    except (AttributeError, KeyError, JSONDecodeError):
+        return []

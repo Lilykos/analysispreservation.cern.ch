@@ -544,6 +544,14 @@ AUTHENTICATION_POPUP_TEMPLATE = 'auth/authentication_popup.html'
 AUTHENTICATION_POPUP__NO_REDIRECT_TEMPLATE = \
     'auth/authentication_popup_no_redirect.html'
 
+#: CERN OIDC Auth Identity endpoint
+OIDC_IDENTITY_API = \
+    'https://authorization-service-api.web.cern.ch/api/v1.0/Identity'
+OIDC_GROUP_API = \
+    'https://authorization-service-api.web.cern.ch/api/v1.0/Group'
+OIDC_TOKEN_API = \
+    'https://auth.cern.ch/auth/realms/cern/api-access/token'
+
 # JSON Schemas
 # ============
 #: Path to where JSON metadata exist
