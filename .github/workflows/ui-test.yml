@@ -2,7 +2,7 @@ name: UI test
 on:
   push:
     branches: [master]
-    paths: 
+    paths:
       - 'ui/**'
       - '.github/workflows/ui-test.yml'
   pull_request:
