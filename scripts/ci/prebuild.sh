@@ -8,12 +8,11 @@ echo "RUNNING PREBUILD SCRIPTS"
 handle_test_result(){
     EXIT_CODE=$1
     RESULT="$2"
-    # Change color to red or green depending on SUCCESS
     if [ $EXIT_CODE -eq 0 ]; then
-        echo "${GREEN}SUCCESS"
+        echo "Commit check was succesfull."
         python setup.py test
     else
-        echo "${RED}FAILURE"
+        echo "Errors in commit message."
     fi
     # Print RESULT if not empty
     if [ -n "$RESULT" ] ; then
@@ -24,8 +23,8 @@ handle_test_result(){
 }
 
 run_git_check(){
-    echo "Running gitlint...${RED}"
-    RESULT=$(gitlint 2>&1)
+    echo "Running gitlint..."
+    RESULT=$(gitlint --commits $GIT_ORIGIN..$GIT_LAST 2>&1)
     local exit_code=$?
     handle_test_result $exit_code "$RESULT"
     return $exit_code

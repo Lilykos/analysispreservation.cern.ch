@@ -1,7 +1,8 @@
 [general]
-#ignore=body-is-missing
+ignore=body-is-missing
 extra-path=gitlint_rules/
 debug=true
+verbosity=3
 
 [title-max-length]
 line-length=50
