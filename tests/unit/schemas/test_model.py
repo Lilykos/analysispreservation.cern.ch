@@ -83,8 +83,7 @@ def test_schema_stringify(db):
     db.session.add(schema)
     db.session.commit()
 
-    assert str(schema) == 'cms-analysis-v1.0.2'
-
+    assert str(schema) == 'cms-analysis-v1.0.21111'
 
 def test_deposit_path_and_index(db):
     schema = Schema(
@@ -93,13 +92,13 @@ def test_deposit_path_and_index(db):
             'deposit_schema': {},
             'major': 1,
             'minor': 0,
-            'patch': 2
+            'patch': 5
         })
     db.session.add(schema)
     db.session.commit()
 
     assert schema.deposit_path == 'deposits/records/cms-analysis-v1.0.2.json'
-    assert schema.deposit_index == 'deposits-records-cms-analysis-v1.0.2'
+    assert schema.deposit_index == 'depo-records-cms-analysis-v1.0.2'
 
 
 def test_record_path_and_index(db):
