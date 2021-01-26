@@ -1,0 +1,28 @@
+#!/bin/bash
+
+handle_test_result(){
+    EXIT_CODE=$1
+    RESULT="$2"
+    if [ $EXIT_CODE -eq 0 ]; then
+        echo "Commit check was succesfull."
+    else
+        echo "Errors in commit message."
+    fi
+
+    # Print RESULT if not empty
+    if [ -n "$RESULT" ] ; then
+        echo "\n$RESULT"
+    fi
+}
+
+run_git_check(){
+    RESULT=$(gitlint --commits $GIT_ORIGIN..$GIT_LAST 2>&1)
+    local exit_code=$?
+    handle_test_result $exit_code "$RESULT"
+    return $exit_code
+}
+
+echo "RUNNING COMMIT MESSAGE CHECKS"
+
+pip install gitlint
+run_git_check
