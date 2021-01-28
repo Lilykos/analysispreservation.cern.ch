@@ -45,6 +45,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
         with:
+          # fetch-depth is needed to get the full list of commits
+          # necessary for commit msg linting when a PR has 2 commits or more
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Setup python 3.6
