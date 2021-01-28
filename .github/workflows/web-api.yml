@@ -47,8 +47,14 @@ jobs:
         with:
           # fetch-depth is needed to get the full list of commits
           # necessary for commit msg linting when a PR has 2 commits or more
-          fetch-depth: 0
+          fetch-depth: ${{ github.event.pull_request.commits }} + 1
           ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
+
       - name: Setup python 3.6
         uses: actions/setup-python@v2
         with:
@@ -83,7 +89,7 @@ jobs:
       #     # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
       #     flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
 
-        
+
       - name: Run integration and  unit tests
         run: |
           ./run-tests.sh
