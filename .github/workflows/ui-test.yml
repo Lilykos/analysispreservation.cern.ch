@@ -1,15 +1,25 @@
 name: UI test
+# on:
+#   push:
+#     branches: [master]
+#     paths: 
+#       - 'ui/**'
+# #       - '.github/workflows/ui-test.yml'
+#   pull_request:
+#     branches: [master]
+#     paths:
+#       - 'ui/**'
+# #       - '.github/workflows/ui-test.yml'
 on:
-  push:
-    branches: [master]
-    paths: 
-      - 'ui/**'
-#       - '.github/workflows/ui-test.yml'
-  pull_request:
-    branches: [master]
-    paths:
-      - 'ui/**'
-#       - '.github/workflows/ui-test.yml'
+  workflow_run:
+    workflows:
+      - Commit Check
+    types:
+      - completed
+    pull_request:
+      branches: [ master ]
+      paths:
+        - 'ui/**'
 jobs:
   UITest:
     name: UI Tests
