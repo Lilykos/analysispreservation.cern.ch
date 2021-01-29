@@ -13,9 +13,13 @@ name: Backend tests
 on:
   workflow_run:
     workflows:
-      - CommitCheck
+      - Commit Check
     types:
       - completed
+    pull_request:
+      branches: [ master ]
+      paths-ignore:
+        - 'ui/**'
 
 jobs:
   BackendSuite:
