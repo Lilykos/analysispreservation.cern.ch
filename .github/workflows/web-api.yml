@@ -14,7 +14,6 @@ on:
   workflow_run:
     workflows:
       - CommitCheck
-    branches: [master]
     types:
       - completed
 
