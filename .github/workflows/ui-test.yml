@@ -25,6 +25,8 @@ jobs:
         run: echo "$GITHUB_CONTEXT"
       - name: check commits
         run: git rev-list --all
+      - name: check branch
+        run: git branch
       - name: Setup node
         uses: actions/setup-node@v2-beta
         with:
