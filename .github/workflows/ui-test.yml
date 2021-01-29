@@ -17,7 +17,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-
+        with:
+          ref: ${{ github.event.workflow_run.head_branch }}
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
+      - name: check commits
+        run: git rev-list --all
       - name: Setup node
         uses: actions/setup-node@v2-beta
         with:
