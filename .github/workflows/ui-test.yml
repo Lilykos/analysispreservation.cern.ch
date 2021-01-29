@@ -27,6 +27,8 @@ jobs:
         run: git rev-list --all
       - name: check branch
         run: git branch
+      - name: check branch
+        run: git checkout -b newbranch
       - name: Setup node
         uses: actions/setup-node@v2-beta
         with:
