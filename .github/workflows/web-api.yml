@@ -19,6 +19,7 @@ on:
 
 jobs:
   BackendSuite:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     name: Backend Tests
     runs-on: ubuntu-latest
     services:
