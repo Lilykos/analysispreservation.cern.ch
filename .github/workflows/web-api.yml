@@ -1,14 +1,22 @@
 name: Backend tests
 
+#on:
+#  push:
+#    branches: [ master ]
+#    paths-ignore:
+#    - 'ui/**'
+#  pull_request:
+#    branches: [ master ]
+#    paths-ignore:
+#    - 'ui/**'
+
 on:
-  push:
-    branches: [ master ]
-    paths-ignore:
-    - 'ui/**'
-  pull_request:
-    branches: [ master ]
-    paths-ignore:
-    - 'ui/**'
+  workflow_run:
+    workflows:
+      - Commit Check
+    branches: [master]
+    types:
+      - completed
 
 jobs:
   BackendSuite:
