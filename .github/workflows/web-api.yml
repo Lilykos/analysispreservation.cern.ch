@@ -13,7 +13,7 @@ name: Backend tests
 on:
   workflow_run:
     workflows:
-      - Commit Check
+      - CommitCheck
     branches: [master]
     types:
       - completed
