@@ -1,15 +1,4 @@
 name: UI test
-# on:
-#   push:
-#     branches: [master]
-#     paths: 
-#       - 'ui/**'
-# #       - '.github/workflows/ui-test.yml'
-#   pull_request:
-#     branches: [master]
-#     paths:
-#       - 'ui/**'
-# #       - '.github/workflows/ui-test.yml'
 on:
   workflow_run:
     workflows:
